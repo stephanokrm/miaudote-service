@@ -28,8 +28,8 @@ class StoreUserRequest extends FormRequest
         $after = Carbon::today()->subYears(150)->format('Y-m-d');
 
         return [
-            'name' => ['required'],
-            'email' => ['required', 'email', Rule::unique('users')],
+            'name' => ['required', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')],
             'password' => ['required', 'confirmed', Password::default()],
             'phone' => ['required', Rule::phone()->country(['BR'])->type('mobile')],
             'born_at' => ['required', 'date', "before_or_equal:{$before}", "after_or_equal:{$after}"],
