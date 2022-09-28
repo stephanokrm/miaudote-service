@@ -17,6 +17,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('ibge_city_id');
             $table->string('name');
+            $table->string('phone');
+            $table->date('born_at');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

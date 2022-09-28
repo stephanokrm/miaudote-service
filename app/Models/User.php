@@ -25,6 +25,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'ibge_city_id',
+        'born_at',
     ];
 
     /**
@@ -44,6 +47,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'born_at' => 'date',
     ];
 
     /**
