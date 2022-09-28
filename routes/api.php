@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\InterestController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,3 +26,4 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::apiResource('animals', AnimalController::class)->only('index', 'show');
+Route::apiResource('users', UserController::class)->only('store');
