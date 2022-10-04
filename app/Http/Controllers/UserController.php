@@ -46,15 +46,16 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateUserRequest  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param  UpdateUserRequest  $request
+     * @param  User  $user
+     * @return UserResource
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user): UserResource
     {
-        //
+        $user->fill($request->all());
+        $user->save();
+
+        return new UserResource($user);
     }
 
     /**
