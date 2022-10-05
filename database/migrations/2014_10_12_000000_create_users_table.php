@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('ibge_city_id');
+            $table->unsignedInteger('ibge_city_id');
             $table->string('name');
             $table->string('phone');
             $table->date('born_at');

@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Species;
 use App\Http\Requests\StoreAnimalRequest;
 use App\Http\Requests\UpdateAnimalRequest;
 use App\Http\Resources\AnimalResource;
 use App\Models\Animal;
+use App\Models\Breed;
+use App\Models\Image;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class AnimalController extends Controller
 {
@@ -23,10 +28,30 @@ class AnimalController extends Controller
      */
     public function store(StoreAnimalRequest $request): AnimalResource
     {
+        $breed = Breed::query()
+            ->when($request->filled('breed'), function ($query) use ($request) {
+                $query->where('name', Str::lower($request->input('breed')));
+            })
+            ->when($request->filled('breed_id'), function (Builder $query) use ($request) {
+                $query->whereBelongsTo(Breed::query()->find($request->input($request->input('breed_id'))));
+            })
+            ->where('species', $request->enum('species', Species::class))
+            ->firstOrCreate([
+                'name' => Str::lower($request->input('breed')),
+                'species' => $request->enum('species', Species::class),
+            ]);
+
         $animal = new Animal();
         $animal->fill($request->all());
         $animal->user()->associate(auth()->user());
+        $animal->breed()->associate($breed);
         $animal->save();
+
+        $image = new Image();
+        $image->fill($request->all());
+        $image->setAttribute('url', $request->file('image')->store('uploads'));
+        $image->profile()->associate($animal);
+        $image->save();
 
         return new AnimalResource($animal);
     }

@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('breeds', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->enum('species', [Species::Dog, Species::Cat]);
+            $table->enum('species', [Species::Dog->value, Species::Cat->value]);
             $table->timestamps();
             $table->softDeletes();
             $table->unique(['name', 'species']);
