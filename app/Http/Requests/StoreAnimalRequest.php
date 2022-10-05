@@ -28,7 +28,7 @@ class StoreAnimalRequest extends FormRequest
      */
     public function rules()
     {
-        $before = Carbon::today()->format('Y-m-d');
+        $before = Carbon::today()->addDay()->format('Y-m-d');
         $after = Carbon::today()->subYears(30)->format('Y-m-d');
 
         return [

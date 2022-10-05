@@ -17,6 +17,10 @@ class Animal extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
 
+    protected $with = [
+        'images'
+    ];
+
     /**
      * @var string[]
      */
