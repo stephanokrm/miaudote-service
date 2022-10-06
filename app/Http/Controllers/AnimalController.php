@@ -40,7 +40,7 @@ class AnimalController extends Controller
 
         $image = new Image();
         $image->fill($request->all());
-        $image->setAttribute('url', $request->file('image')->storePublicly('uploads'));
+        $image->setAttribute('url', $request->file('image')->storePublicly('uploads', 's3'));
         $image->profile()->associate($animal);
         $image->save();
 
