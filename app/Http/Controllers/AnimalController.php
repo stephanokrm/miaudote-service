@@ -9,7 +9,9 @@ use App\Http\Resources\AnimalResource;
 use App\Models\Animal;
 use App\Models\Breed;
 use App\Models\Image;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image as Intervention;
 
 class AnimalController extends Controller
 {
@@ -38,9 +40,19 @@ class AnimalController extends Controller
         $animal->breed()->associate($breed);
         $animal->save();
 
+        $uploaded = $request->file('image');
+
+        $path = "uploads/{$uploaded->hashName()}";
+
+        Storage::put(
+            $path,
+            Intervention::make($uploaded->path())->fit(500)->encode()->getEncoded(),
+            ['visibility' => 'public']
+        );
+
         $image = new Image();
         $image->fill($request->all());
-        $image->setAttribute('url', $request->file('image')->storePublicly('uploads', 's3'));
+        $image->setAttribute('url', $path);
         $image->profile()->associate($animal);
         $image->save();
 

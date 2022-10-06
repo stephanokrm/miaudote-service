@@ -10,6 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rules\File;
 
 class StoreAnimalRequest extends FormRequest
 {
@@ -44,7 +45,7 @@ class StoreAnimalRequest extends FormRequest
             'ibge_city_id' => ['required', 'integer'],
             'breed' => ['required_without:breed_id', 'string'],
             'breed_id' => ['required_without:breed', 'uuid', Rule::exists('breeds')],
-            'image' => ['required', 'image'],
+            'image' => ['required', File::image()->max(5000)],
         ];
     }
 }
