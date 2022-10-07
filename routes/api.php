@@ -18,13 +18,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/user', function (Request $request) {
+    Route::get('/user/me', function (Request $request) {
         return $request->user();
     });
-    Route::apiResource('interests', InterestController::class);
-    Route::apiResource('users', UserController::class)->except('store');
-    Route::apiResource('animals', AnimalController::class)->except('index', 'show');
+    Route::apiResource('interest', InterestController::class);
+    Route::apiResource('user', UserController::class)->except('store');
+    Route::apiResource('animal', AnimalController::class)->except('index', 'show');
 });
 
-Route::apiResource('users', UserController::class)->only('store');
-Route::apiResource('animals', AnimalController::class)->only('index', 'show');
+Route::apiResource('user', UserController::class)->only('store');
+Route::apiResource('animal', AnimalController::class)->only('index', 'show');
