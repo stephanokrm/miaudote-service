@@ -18,6 +18,7 @@ class Animal extends Model
     use HasFactory, HasUuids, SoftDeletes;
 
     protected $with = [
+        'breed',
         'images'
     ];
 

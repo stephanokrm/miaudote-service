@@ -45,50 +45,42 @@ class AnimalPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Animal  $animal
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @param  User  $user
+     * @param  Animal  $animal
+     * @return bool
      */
-    public function update(User $user, Animal $animal)
+    public function update(User $user, Animal $animal): bool
     {
-        //
+        return $animal->user()->is($user);
     }
 
     /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Animal  $animal
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @param  User  $user
+     * @param  Animal  $animal
+     * @return bool
      */
-    public function delete(User $user, Animal $animal)
+    public function delete(User $user, Animal $animal): bool
     {
-        //
+        return $animal->user()->is($user);
     }
 
     /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Animal  $animal
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @param  User  $user
+     * @param  Animal  $animal
+     * @return bool
      */
-    public function restore(User $user, Animal $animal)
+    public function restore(User $user, Animal $animal): bool
     {
-        //
+        return $animal->user()->is($user);
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Animal  $animal
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @param  User  $user
+     * @param  Animal  $animal
+     * @return bool
      */
-    public function forceDelete(User $user, Animal $animal)
+    public function forceDelete(User $user, Animal $animal): bool
     {
-        //
+        return $animal->user()->is($user);
     }
 }
