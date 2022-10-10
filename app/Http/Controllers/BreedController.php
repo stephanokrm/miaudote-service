@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBreedRequest;
 use App\Http\Requests\UpdateBreedRequest;
+use App\Http\Resources\BreedResource;
 use App\Models\Breed;
 
 class BreedController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return BreedResource
      */
-    public function index()
+    public function index(): BreedResource
     {
-        //
+        return new BreedResource(Breed::all());
     }
 
     /**

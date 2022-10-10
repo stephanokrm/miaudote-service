@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\AnimalController;
+use App\Http\Controllers\BreedController;
 use App\Http\Controllers\InterestController;
-use App\Http\Controllers\UserAnimalController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,8 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/user/me', [UserController::class, 'me']);
-    Route::get('/user/{user}/animal', [UserAnimalController::class, 'index']);
+    Route::get('/animal/me', [AnimalController::class, 'me']);
+
     Route::apiResource('interest', InterestController::class);
+    Route::apiResource('breed', BreedController::class);
     Route::apiResource('user', UserController::class)->except('store');
     Route::apiResource('animal', AnimalController::class)->except('index', 'show');
 });
