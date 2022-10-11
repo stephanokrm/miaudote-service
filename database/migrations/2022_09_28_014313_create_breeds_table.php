@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->string('name');
             $table->enum('species', [Species::Dog->value, Species::Cat->value]);
             $table->timestamps();
-            $table->softDeletes();
             $table->unique(['name', 'species']);
         });
     }

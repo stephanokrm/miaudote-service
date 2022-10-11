@@ -12,8 +12,7 @@ return new class extends Migration {
     {
         Schema::create('images', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('url');
-            $table->boolean('avatar')->default(false);
+            $table->string('path');
             $table->uuidMorphs('profile');
             $table->timestamps();
         });

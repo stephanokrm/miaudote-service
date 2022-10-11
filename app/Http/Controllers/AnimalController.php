@@ -8,14 +8,28 @@ use App\Http\Requests\UpdateAnimalRequest;
 use App\Http\Resources\AnimalResource;
 use App\Models\Animal;
 use App\Models\Breed;
-use App\Models\Image;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image as Intervention;
 
+/**
+ *
+ */
 class AnimalController extends Controller
 {
+    /**
+     * @var ImageService
+     */
+    private ImageService $imageService;
+
+    /**
+     * @param  ImageService  $imageService
+     */
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     /**
      * @return AnimalResource
      */
@@ -31,31 +45,19 @@ class AnimalController extends Controller
     public function store(StoreAnimalRequest $request): AnimalResource
     {
         $breed = Breed::query()->firstOrCreate([
-            'name' => Str::lower($request->input('breed')),
-            'species' => $request->enum('species', Species::class),
+            'id' => $request->input('breed_id'),
+            'name' => Str::lower($request->input('breed_name')),
+            'species' => $request->enum('breed_species', Species::class),
         ]);
+
+        $avatar = $this->imageService->upload($request->file('avatar'));
 
         $animal = new Animal();
         $animal->fill($request->all());
+        $animal->setAttribute('avatar', $avatar);
         $animal->user()->associate(auth()->user());
         $animal->breed()->associate($breed);
         $animal->save();
-
-        $uploaded = $request->file('image');
-
-        $path = "uploads/{$uploaded->hashName()}";
-
-        Storage::put(
-            $path,
-            Intervention::make($uploaded->path())->fit(500)->encode()->getEncoded(),
-            ['visibility' => 'public']
-        );
-
-        $image = new Image();
-        $image->fill($request->all());
-        $image->setAttribute('url', $path);
-        $image->profile()->associate($animal);
-        $image->save();
 
         return new AnimalResource($animal);
     }
@@ -85,24 +87,17 @@ class AnimalController extends Controller
         $animal->fill($request->all());
         $animal->user()->associate(auth()->user());
         $animal->breed()->associate($breed);
+
+        if ($request->hasFile('avatar')) {
+            $avatar = $this->imageService->upload($request->file('avatar'));
+
+            $animal->setAttribute('avatar', $avatar);
+        }
+
         $animal->save();
 
-        if ($request->hasFile('image')) {
-            $uploaded = $request->file('image');
-
-            $path = "uploads/{$uploaded->hashName()}";
-
-            Storage::put(
-                $path,
-                Intervention::make($uploaded->path())->fit(500)->encode()->getEncoded(),
-                ['visibility' => 'public']
-            );
-
-            $image = new Image();
-            $image->fill($request->all());
-            $image->setAttribute('url', $path);
-            $image->profile()->associate($animal);
-            $image->save();
+        if ($animal->wasChanged('avatar')) {
+            $this->imageService->delete($animal->getOriginal('avatar'));
         }
 
         return new AnimalResource($animal);

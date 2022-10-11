@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description');
             $table->date('born_at');
+            $table->string('avatar');
             $table->enum('gender', [Gender::Male->value, Gender::Female->value]);
             $table->enum('playfulness', [Playfulness::One->value, Playfulness::Two->value, Playfulness::Three->value, Playfulness::Four->value, Playfulness::Five->value]);
             $table->enum('family_friendly', [Friendly::One->value, Friendly::Two->value, Friendly::Three->value, Friendly::Four->value, Friendly::Five->value]);

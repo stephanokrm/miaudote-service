@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Friendly;
 use App\Enums\Gender;
 use App\Enums\Playfulness;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Animal extends Model
 {
@@ -49,6 +51,16 @@ class Animal extends Model
         'pet_friendly' => Friendly::class,
         'children_friendly' => Friendly::class,
     ];
+
+    /**
+     * @return Attribute
+     */
+    protected function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Storage::url($value),
+        );
+    }
 
     /**
      * @return BelongsToMany

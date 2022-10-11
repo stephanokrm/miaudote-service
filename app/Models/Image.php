@@ -9,21 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ *
+ */
 class Image extends Model
 {
     use HasFactory, HasUuids;
-
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        'url',
-        'avatar',
-    ];
-
-    protected $casts = [
-        'avatar' => 'boolean',
-    ];
 
     /**
      * @return MorphTo
@@ -36,10 +27,10 @@ class Image extends Model
     /**
      * @return Attribute
      */
-    protected function url(): Attribute
+    protected function path(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Storage::url($value),
+            get: fn($value) => Storage::url($value),
         );
     }
 }
