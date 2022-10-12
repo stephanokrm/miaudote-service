@@ -21,7 +21,6 @@ class Animal extends Model
 
     protected $with = [
         'breed',
-        'images'
     ];
 
     /**

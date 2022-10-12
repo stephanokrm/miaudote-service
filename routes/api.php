@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\BreedController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InterestController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -21,11 +22,13 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/user/me', [UserController::class, 'me']);
     Route::get('/animal/me', [AnimalController::class, 'me']);
 
-    Route::apiResource('interest', InterestController::class);
-    Route::apiResource('breed', BreedController::class);
-    Route::apiResource('user', UserController::class)->except('store');
     Route::apiResource('animal', AnimalController::class)->except('index', 'show');
+    Route::apiResource('animal.image', ImageController::class)->only('index', 'store');
+    Route::apiResource('breed', BreedController::class);
+    Route::apiResource('image', ImageController::class)->only('destroy');
+    Route::apiResource('interest', InterestController::class);
+    Route::apiResource('user', UserController::class)->except('store');
 });
 
-Route::apiResource('user', UserController::class)->only('store');
 Route::apiResource('animal', AnimalController::class)->only('index', 'show');
+Route::apiResource('user', UserController::class)->only('store');

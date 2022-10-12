@@ -3,63 +3,60 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreImageRequest;
-use App\Http\Requests\UpdateImageRequest;
+use App\Http\Resources\ImageResource;
+use App\Models\Animal;
 use App\Models\Image;
+use App\Services\ImageService;
 
 class ImageController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var ImageService
      */
-    public function index()
+    private ImageService $imageService;
+
+    /**
+     * @param  ImageService  $imageService
+     */
+    public function __construct(ImageService $imageService)
     {
-        //
+        $this->imageService = $imageService;
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreImageRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param  Animal  $animal
+     * @return ImageResource
      */
-    public function store(StoreImageRequest $request)
+    public function index(Animal $animal): ImageResource
     {
-        //
+        return new ImageResource($animal->images()->without('profile')->get());
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
+     * @param  Animal  $animal
+     * @param  StoreImageRequest  $request
+     * @return ImageResource
      */
-    public function show(Image $image)
+    public function store(Animal $animal, StoreImageRequest $request): ImageResource
     {
-        //
+        $path = $this->imageService->upload($request->file('image'));
+
+        $image = new Image();
+        $image->setAttribute('path', $path);
+        $image->profile()->associate($animal);
+        $image->save();
+
+        return new ImageResource($image);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateImageRequest  $request
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
+     * @param  Image  $image
+     * @return bool|null
      */
-    public function update(UpdateImageRequest $request, Image $image)
+    public function destroy(Image $image): bool|null
     {
-        //
-    }
+        $this->imageService->delete($image->getAttribute('path'));
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Image $image)
-    {
-        //
+        return $image->delete();
     }
 }
