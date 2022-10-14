@@ -29,7 +29,7 @@ class ImageController extends Controller
      */
     public function index(Animal $animal): ImageResource
     {
-        return new ImageResource($animal->images()->without('profile')->get());
+        return new ImageResource($animal->images()->without('profile')->latest()->get());
     }
 
     /**
@@ -39,7 +39,7 @@ class ImageController extends Controller
      */
     public function store(Animal $animal, StoreImageRequest $request): ImageResource
     {
-        $path = $this->imageService->upload($request->file('image'));
+        $path = $this->imageService->upload($request->file('file'));
 
         $image = new Image();
         $image->setAttribute('path', $path);

@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -32,6 +33,7 @@ class UpdateUserRequest extends FormRequest
             'phone' => ['required', Rule::phone()->country(['BR'])->type('mobile')],
             'born_at' => ['required', 'date', "before_or_equal:{$before}", "after_or_equal:{$after}"],
             'ibge_city_id' => ['required', 'integer'],
+            'file' => ['sometimes', File::image()->max(5000)],
         ];
     }
 }

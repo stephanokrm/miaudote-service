@@ -31,7 +31,8 @@ class StoreAnimalRequest extends FormRequest
         $after = Carbon::today()->subYears(30)->format('Y-m-d');
 
         return [
-            'avatar' => ['required', File::image()->max(5000)],
+            'file' => ['required', File::image()->max(5000)],
+            'avatar' => ['sometimes', 'string'],
             'born_at' => ['required', 'date', "before_or_equal:{$before}", "after_or_equal:{$after}"],
             'breed_id' => ['nullable', 'required_without:breed_name', 'uuid', Rule::exists('breeds', 'id')],
             'breed_name' => ['nullable', 'required_without:breed_id', 'string'],

@@ -40,7 +40,7 @@ class UpdateAnimalRequest extends FormRequest
             'family_friendly' => ['required', new Enum(Friendly::class)],
             'gender' => ['required', new Enum(Gender::class)],
             'ibge_city_id' => ['required', 'integer'],
-            'image' => ['sometimes', File::image()->max(5000)],
+            'file' => ['sometimes', File::image()->max(5000)],
             'name' => ['required', 'string', 'max:255'],
             'pet_friendly' => ['required', new Enum(Friendly::class)],
             'playfulness' => ['required', new Enum(Playfulness::class)],

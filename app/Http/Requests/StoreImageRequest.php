@@ -21,7 +21,7 @@ class StoreImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => ['required', File::image()->max(5000)],
+            'file' => ['required', File::image()->max(5000)],
         ];
     }
 }

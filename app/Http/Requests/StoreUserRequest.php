@@ -33,7 +33,7 @@ class StoreUserRequest extends FormRequest
             'phone' => ['required', Rule::phone()->country(['BR'])->type('mobile')],
             'born_at' => ['required', 'date', "before_or_equal:{$before}", "after_or_equal:{$after}"],
             'ibge_city_id' => ['required', 'integer'],
-            'avatar' => ['required', File::image()->max(5000)],
+            'file' => ['required', File::image()->max(5000)],
         ];
     }
 }

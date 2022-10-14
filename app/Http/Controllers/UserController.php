@@ -41,7 +41,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): UserResource
     {
-        $avatar = $this->imageService->upload($request->file('avatar'));
+        $avatar = $this->imageService->upload($request->file('file'));
 
         $user = new User();
         $user->fill($request->all());
@@ -70,8 +70,8 @@ class UserController extends Controller
     {
         $user->fill($request->all());
 
-        if ($request->hasFile('avatar')) {
-            $avatar = $this->imageService->upload($request->file('avatar'));
+        if ($request->hasFile('file')) {
+            $avatar = $this->imageService->upload($request->file('file'));
 
             $user->setAttribute('avatar', $avatar);
         }
@@ -103,5 +103,14 @@ class UserController extends Controller
     public function me(Request $request): UserResource
     {
         return new UserResource($request->user());
+    }
+
+    /**
+     * @param  Request  $request
+     * @return mixed
+     */
+    public function logout(Request $request): mixed
+    {
+        return $request->user()->token()->revoke();
     }
 }

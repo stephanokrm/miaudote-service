@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/user/me', [UserController::class, 'me']);
+    Route::post('/user/logout', [UserController::class, 'logout']);
     Route::get('/animal/me', [AnimalController::class, 'me']);
 
     Route::apiResource('animal', AnimalController::class)->except('index', 'show');

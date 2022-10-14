@@ -35,7 +35,7 @@ class AnimalController extends Controller
      */
     public function index(): AnimalResource
     {
-        return new AnimalResource(Animal::all());
+        return new AnimalResource(Animal::query()->latest('updated_at')->get());
     }
 
     /**
@@ -50,7 +50,7 @@ class AnimalController extends Controller
             'species' => $request->enum('breed_species', Species::class),
         ]);
 
-        $avatar = $this->imageService->upload($request->file('avatar'));
+        $avatar = $this->imageService->upload($request->file('file'));
 
         $animal = new Animal();
         $animal->fill($request->all());
@@ -88,8 +88,8 @@ class AnimalController extends Controller
         $animal->user()->associate(auth()->user());
         $animal->breed()->associate($breed);
 
-        if ($request->hasFile('avatar')) {
-            $avatar = $this->imageService->upload($request->file('avatar'));
+        if ($request->hasFile('file')) {
+            $avatar = $this->imageService->upload($request->file('file'));
 
             $animal->setAttribute('avatar', $avatar);
         }
@@ -120,6 +120,6 @@ class AnimalController extends Controller
      */
     public function me(Request $request): AnimalResource
     {
-        return new AnimalResource($request->user()->animals()->get());
+        return new AnimalResource($request->user()->animals()->latest('updated_at')->get());
     }
 }
