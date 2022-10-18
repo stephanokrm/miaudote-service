@@ -32,9 +32,9 @@ class UpdateAnimalRequest extends FormRequest
 
         return [
             'born_at' => ['required', 'date', "before_or_equal:{$before}", "after_or_equal:{$after}"],
-            'breed_id' => ['nullable', 'required_without:breed_name', 'uuid', Rule::exists('breeds', 'id')],
-            'breed_name' => ['nullable', 'required_without:breed_id', 'string'],
-            'breed_species' => ['required', new Enum(Species::class)],
+            'breed.id' => ['nullable', 'required_without:breed.name', 'uuid', Rule::exists('breeds', 'id')],
+            'breed.name' => ['nullable', 'required_without:breed.id', 'string'],
+            'breed.species' => ['required', new Enum(Species::class)],
             'children_friendly' => ['required', new Enum(Friendly::class)],
             'description' => ['required', 'string'],
             'family_friendly' => ['required', new Enum(Friendly::class)],

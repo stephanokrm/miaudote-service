@@ -45,9 +45,9 @@ class AnimalController extends Controller
     public function store(StoreAnimalRequest $request): AnimalResource
     {
         $breed = Breed::query()->firstOrCreate([
-            'id' => $request->input('breed_id'),
-            'name' => Str::lower($request->input('breed_name')),
-            'species' => $request->enum('breed_species', Species::class),
+            'id' => $request->input('breed.id'),
+            'name' => Str::lower($request->input('breed.name')),
+            'species' => $request->enum('breed.species', Species::class),
         ]);
 
         $avatar = $this->imageService->upload($request->file('file'));
@@ -79,9 +79,9 @@ class AnimalController extends Controller
     public function update(UpdateAnimalRequest $request, Animal $animal): AnimalResource
     {
         $breed = Breed::query()->firstOrCreate([
-            'id' => $request->input('breed_id'),
-            'name' => Str::lower($request->input('breed_name')),
-            'species' => $request->enum('breed_species', Species::class),
+            'id' => $request->input('breed.id'),
+            'name' => Str::lower($request->input('breed.name')),
+            'species' => $request->enum('breed.species', Species::class),
         ]);
 
         $animal->fill($request->all());
