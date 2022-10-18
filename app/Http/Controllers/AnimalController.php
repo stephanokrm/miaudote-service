@@ -68,7 +68,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal): AnimalResource
     {
-        return new AnimalResource($animal->load('images', 'user'));
+        return new AnimalResource($animal->load('images', 'user:name,avatar'));
     }
 
     /**
