@@ -11,7 +11,7 @@ use App\Models\Breed;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Http;
+
 /**
  *
  */
@@ -59,6 +59,7 @@ class AnimalController extends Controller
         $animal->breed()->associate($breed);
         $animal->save();
 
+
         return new AnimalResource($animal);
     }
 
@@ -99,13 +100,6 @@ class AnimalController extends Controller
         if ($animal->wasChanged('avatar')) {
             $this->imageService->delete($animal->getOriginal('avatar'));
         }
-
-        $frontend = sprintf("%s/api/revalidate", env('FRONTEND_URL'));
-
-        Http::get($frontend, [
-            'secret' => env('FRONTEND_CLIENT_SECRET'),
-            'animal' => $animal->getKey(),
-        ]);
 
         return new AnimalResource($animal);
     }
