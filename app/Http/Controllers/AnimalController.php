@@ -59,13 +59,6 @@ class AnimalController extends Controller
         $animal->breed()->associate($breed);
         $animal->save();
 
-        $frontend = sprintf("%s/api/revalidate", env('FRONTEND_URL'));
-
-        Http::get($frontend, [
-            'secret' => env('FRONTEND_CLIENT_SECRET'),
-            'animal' => $animal->getKey(),
-        ]);
-
         return new AnimalResource($animal);
     }
 
