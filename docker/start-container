@@ -10,6 +10,7 @@ fi
 
 composer install
 php artisan migrate
+php artisan passport:install
 chmod -R ugo+rw /.composer
 
 if [ ! -z "$PORT" ]; then
