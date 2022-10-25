@@ -45,6 +45,7 @@ class StoreAnimalRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'pet_friendly' => ['required', new Enum(Friendly::class)],
             'playfulness' => ['required', new Enum(Playfulness::class)],
+            'castrated' => ['required', 'boolean'],
         ];
     }
 }

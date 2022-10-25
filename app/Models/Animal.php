@@ -36,6 +36,7 @@ class Animal extends Model
         'pet_friendly',
         'children_friendly',
         'ibge_city_id',
+        'castrated',
     ];
 
     /**
@@ -49,6 +50,7 @@ class Animal extends Model
         'family_friendly' => Friendly::class,
         'pet_friendly' => Friendly::class,
         'children_friendly' => Friendly::class,
+        'castrated' => 'boolean',
     ];
 
     /**
