@@ -13,8 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('interests', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        Schema::create('animal_user', function (Blueprint $table) {
             $table->foreignUuid('user_id')->constrained();
             $table->foreignUuid('animal_id')->constrained();
             $table->timestamps();
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('interests');
+        Schema::dropIfExists('animal_user');
     }
 };

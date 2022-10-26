@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreInterestRequest;
 use App\Http\Requests\UpdateInterestRequest;
 use App\Http\Resources\InterestResource;
 use App\Models\Animal;
@@ -15,26 +14,21 @@ class InterestController extends Controller
      */
     public function index(): InterestResource
     {
-        $interests = Interest::query()->whereBelongsTo(auth()->user())->get();
+        $animals = Animal::query()->whereBelongsTo(auth()->user())->get();
+        $interests = Interest::query()->whereBelongsTo($animals)->get();
 
         return new InterestResource($interests);
     }
 
     /**
-     * @param  StoreInterestRequest  $request
-     * @return InterestResource
+     * @param Animal $animal
+     * @return bool
      */
-    public function store(StoreInterestRequest $request): InterestResource
+    public function store(Animal $animal): bool
     {
-        $animal = Animal::query()->findOrFail($request->input('animal_id'));
+        $animal->interests()->attach(auth()->user());
 
-        $interest = new Interest();
-        $interest->fill($request->all());
-        $interest->users()->save(auth()->user());
-        $interest->animals()->save($animal);
-        $interest->save();
-
-        return new InterestResource($interest);
+        return true;
     }
 
     /**
@@ -65,5 +59,13 @@ class InterestController extends Controller
         $interest->delete();
 
         return new InterestResource($interest);
+    }
+
+    /**
+     * @return InterestResource
+     */
+    public function me(): InterestResource
+    {
+        return new InterestResource(auth()->user()->interests()->get());
     }
 }

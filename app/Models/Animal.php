@@ -68,7 +68,7 @@ class Animal extends Model
      */
     public function interests(): BelongsToMany
     {
-        return $this->belongsToMany(Interest::class)->withTimestamps();
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     /**
