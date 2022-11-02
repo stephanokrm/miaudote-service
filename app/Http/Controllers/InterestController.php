@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateInterestRequest;
+use App\Http\Resources\AnimalResource;
 use App\Http\Resources\InterestResource;
 use App\Models\Animal;
-use App\Models\Interest;
 
 class InterestController extends Controller
 {
     /**
-     * @return InterestResource
+     * @return AnimalResource
      */
-    public function index(): InterestResource
+    public function index(): AnimalResource
     {
-        $animals = Animal::query()->whereBelongsTo(auth()->user())->get();
-        $interests = Interest::query()->whereBelongsTo($animals)->get();
+        $animals = Animal::query()
+            ->whereBelongsTo(auth()->user())
+            ->whereHas('interests')
+            ->latest()
+            ->with('user')
+            ->get();
 
-        return new InterestResource($interests);
+        return new AnimalResource($animals);
     }
 
     /**
@@ -26,39 +29,9 @@ class InterestController extends Controller
      */
     public function store(Animal $animal): bool
     {
-        $animal->interests()->attach(auth()->user());
+        $animal->interests()->sync(auth()->user());
 
         return true;
-    }
-
-    /**
-     * @param  Interest  $interest
-     * @return InterestResource
-     */
-    public function show(Interest $interest): InterestResource
-    {
-        return new InterestResource($interest);
-    }
-
-    /**
-     * @param  UpdateInterestRequest  $request
-     * @param  Interest  $interest
-     * @return InterestResource
-     */
-    public function update(UpdateInterestRequest $request, Interest $interest): InterestResource
-    {
-        return new InterestResource($interest);
-    }
-
-    /**
-     * @param  Interest  $interest
-     * @return InterestResource
-     */
-    public function destroy(Interest $interest): InterestResource
-    {
-        $interest->delete();
-
-        return new InterestResource($interest);
     }
 
     /**
