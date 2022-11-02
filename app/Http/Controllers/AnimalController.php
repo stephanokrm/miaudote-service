@@ -9,6 +9,7 @@ use App\Http\Resources\AnimalResource;
 use App\Models\Animal;
 use App\Models\Breed;
 use App\Services\ImageService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -23,7 +24,7 @@ class AnimalController extends Controller
     private ImageService $imageService;
 
     /**
-     * @param  ImageService  $imageService
+     * @param ImageService $imageService
      */
     public function __construct(ImageService $imageService)
     {
@@ -31,15 +32,29 @@ class AnimalController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return AnimalResource
      */
-    public function index(): AnimalResource
+    public function index(Request $request): AnimalResource
     {
-        return new AnimalResource(Animal::query()->latest('updated_at')->get());
+        $animals = Animal::query()
+            ->when($request->filled('gender'), function (Builder $builder) use ($request) {
+                $builder->where('gender', $request->query('gender'));
+            })
+            ->when($request->filled('species'), function (Builder $builder) use ($request) {
+                $builder->whereRelation('breed', 'species', $request->query('species'));
+            })
+            ->when($request->filled('castrated'), function (Builder $builder) use ($request) {
+                $builder->where('castrated', $request->query('castrated'));
+            })
+            ->latest('updated_at')
+            ->get();
+
+        return new AnimalResource($animals);
     }
 
     /**
-     * @param  StoreAnimalRequest  $request
+     * @param StoreAnimalRequest $request
      * @return AnimalResource
      */
     public function store(StoreAnimalRequest $request): AnimalResource
@@ -64,7 +79,7 @@ class AnimalController extends Controller
     }
 
     /**
-     * @param  Animal  $animal
+     * @param Animal $animal
      * @return AnimalResource
      */
     public function show(Animal $animal): AnimalResource
@@ -73,8 +88,8 @@ class AnimalController extends Controller
     }
 
     /**
-     * @param  UpdateAnimalRequest  $request
-     * @param  Animal  $animal
+     * @param UpdateAnimalRequest $request
+     * @param Animal $animal
      * @return AnimalResource
      */
     public function update(UpdateAnimalRequest $request, Animal $animal): AnimalResource
@@ -105,7 +120,7 @@ class AnimalController extends Controller
     }
 
     /**
-     * @param  Animal  $animal
+     * @param Animal $animal
      * @return AnimalResource
      */
     public function destroy(Animal $animal): AnimalResource
@@ -116,7 +131,7 @@ class AnimalController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return AnimalResource
      */
     public function me(Request $request): AnimalResource
