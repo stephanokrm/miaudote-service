@@ -29,7 +29,18 @@ class InterestController extends Controller
      */
     public function store(Animal $animal): bool
     {
-        $animal->interests()->sync(auth()->user());
+        $animal->interests()->attach(auth()->user());
+
+        return true;
+    }
+
+    /**
+     * @param Animal $animal
+     * @return bool
+     */
+    public function destroy(Animal $animal): bool
+    {
+        $animal->interests()->detach(auth()->user());
 
         return true;
     }
@@ -39,6 +50,6 @@ class InterestController extends Controller
      */
     public function me(): InterestResource
     {
-        return new InterestResource(auth()->user()->interests()->get());
+        return new InterestResource(auth()->user()->interests()->with('user')->get());
     }
 }

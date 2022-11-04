@@ -23,13 +23,14 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/user/logout', [UserController::class, 'logout']);
     Route::get('/animal/me', [AnimalController::class, 'me']);
     Route::get('/interest/me', [InterestController::class, 'me']);
+    Route::delete('/animal/{animal}/interest', [InterestController::class, 'destroy']);
 
     Route::apiResource('animal', AnimalController::class)->except('index', 'show');
     Route::apiResource('animal.image', ImageController::class)->only('index', 'store');
     Route::apiResource('animal.interest', InterestController::class)->only('store');
     Route::apiResource('breed', BreedController::class);
     Route::apiResource('image', ImageController::class)->only('destroy');
-    Route::apiResource('interest', InterestController::class)->except('store');
+    Route::apiResource('interest', InterestController::class)->except('store', 'destroy');
     Route::apiResource('user', UserController::class)->except('store');
 });
 
