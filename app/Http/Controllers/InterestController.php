@@ -38,6 +38,20 @@ class InterestController extends Controller
      * @param Animal $animal
      * @return bool
      */
+    public function show(Animal $animal): bool
+    {
+        if (!auth()->hasUser()) return false;
+
+        return $animal
+            ->interests()
+            ->wherePivot('user_id', auth()->user()->getAuthIdentifier())
+            ->exists();
+    }
+
+    /**
+     * @param Animal $animal
+     * @return bool
+     */
     public function destroy(Animal $animal): bool
     {
         $animal->interests()->detach(auth()->user());
