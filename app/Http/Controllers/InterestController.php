@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AnimalResource;
 use App\Http\Resources\InterestResource;
 use App\Models\Animal;
+use App\Models\Answer;
 
 class InterestController extends Controller
 {
@@ -54,7 +55,11 @@ class InterestController extends Controller
      */
     public function destroy(Animal $animal): bool
     {
-        $animal->interests()->detach(auth()->user());
+        $user = auth()->user();
+
+        Answer::query()->whereBelongsTo($animal)->whereBelongsTo($user)->delete();
+
+        $animal->interests()->detach($user);
 
         return true;
     }
